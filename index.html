@@ -18,6 +18,12 @@
         th {
             background-color: #f2f2f2;
         }
+        .button-container {
+            margin-top: 10px;
+        }
+        .button-container button {
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -30,15 +36,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>Thomas</td>
-            <td id="thomasPacks">6</td>
-        </tr>
-        <tr>
-            <td>Kobe</td>
-            <td id="kobePacks">6</td>
-        </tr>
-        <!-- Add more rows as needed -->
+        <!-- Table content will be dynamically generated from localStorage -->
     </tbody>
 </table>
 
@@ -47,50 +45,75 @@
     <input type="text" id="name" name="name"><br><br>
     <label for="amount">Amount of Packs Used:</label>
     <input type="number" id="amount" name="amount"><br><br>
-    <button type="button" onclick="subtractPacks()">Submit</button>
-    <button type="button" onclick="resetToSix()" style="margin-top: 5px;"">Reset to 6</button>
+    <div class="button-container">
+        <button type="button" onclick="subtractPacks()">Use Packs</button>
+        <button type="button" onclick="addThreePacks()">Add 3 Packs</button>
+        <button type="button" onclick="resetToSix()">Reset to 6</button>
+    </div>
 </form>
 
-<button type="button" onclick="addThreePacks()" style="margin-top: 10px;">New Set!!</button>
-
 <script>
-    function subtractPacks() {
-        var name = document.getElementById("name").value.toLowerCase(); // Convert to lowercase
-        var amount = parseInt(document.getElementById("amount").value);
-        var packsCell = document.getElementById(name.toLowerCase() + "Packs");
-        if (packsCell) {
-            var currentPacks = parseInt(packsCell.innerHTML);
-            if (!isNaN(currentPacks) && !isNaN(amount) && amount > 0 && currentPacks >= amount) {
-                packsCell.innerHTML = currentPacks - amount;
-            } else {
-                alert("Invalid input or insufficient packs!");
+    // Read data from localStorage if available
+    var data = localStorage.getItem('packsData');
+    var packsData = data ? JSON.parse(data) : {};
+
+    // Function to update table based on packsData
+    function updateTable() {
+        var tableBody = document.querySelector("#packsTable tbody");
+        tableBody.innerHTML = '';
+
+        for (var name in packsData) {
+            if (packsData.hasOwnProperty(name)) {
+                var row = tableBody.insertRow();
+                var cellName = row.insertCell(0);
+                var cellPacks = row.insertCell(1);
+
+                cellName.innerHTML = name;
+                cellPacks.innerHTML = packsData[name];
             }
+        }
+    }
+
+    // Call updateTable initially
+    updateTable();
+
+    function subtractPacks() {
+        var name = document.getElementById("name").value.toLowerCase();
+        var amount = parseInt(document.getElementById("amount").value);
+
+        if (!name || isNaN(amount) || amount <= 0) {
+            alert("Invalid input!");
+            return;
+        }
+
+        if (name in packsData && packsData[name] >= amount) {
+            packsData[name] -= amount;
+            localStorage.setItem('packsData', JSON.stringify(packsData));
+            updateTable();
         } else {
-            alert("Name not found in the table!");
+            alert("Invalid input or insufficient packs!");
         }
     }
 
     function addThreePacks() {
-        var rows = document.getElementById("packsTable").rows;
-        for (var i = 1; i < rows.length; i++) {
-            var packsCell = rows[i].cells[1];
-            if (packsCell) {
-                var currentPacks = parseInt(packsCell.innerHTML);
-                if (!isNaN(currentPacks)) {
-                    packsCell.innerHTML = currentPacks + 3;
-                }
+        for (var name in packsData) {
+            if (packsData.hasOwnProperty(name)) {
+                packsData[name] += 3;
             }
         }
+        localStorage.setItem('packsData', JSON.stringify(packsData));
+        updateTable();
     }
 
     function resetToSix() {
-        var name = document.getElementById("name").value.toLowerCase(); // Convert to lowercase
-        var packsCell = document.getElementById(name + "Packs");
-        if (packsCell) {
-            packsCell.innerHTML = 6;
-        } else {
-            alert("Name not found in the table!");
+        var name = document.getElementById("name").value.toLowerCase();
+        if (!name) {
+            alert("Invalid input!");
+            return;
         }
+        packsData[name] = 6;
+        localStorage.setItem('packsData', JSON.stringify(packsData));
+        updateTable();
     }
 </script>
 
