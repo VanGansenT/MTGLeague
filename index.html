@@ -48,6 +48,7 @@
     <label for="amount">Amount of Packs Used:</label>
     <input type="number" id="amount" name="amount"><br><br>
     <button type="button" onclick="subtractPacks()">Submit</button>
+    <button type="button" onclick="resetToSix()" style="margin-top: 5px;"">Reset to 6</button>
 </form>
 
 <button type="button" onclick="addThreePacks()" style="margin-top: 10px;">New Set!!</button>
@@ -79,6 +80,16 @@
                     packsCell.innerHTML = currentPacks + 3;
                 }
             }
+        }
+    }
+
+    function resetToSix() {
+        var name = document.getElementById("name").value.toLowerCase(); // Convert to lowercase
+        var packsCell = document.getElementById(name + "Packs");
+        if (packsCell) {
+            packsCell.innerHTML = 6;
+        } else {
+            alert("Name not found in the table!");
         }
     }
 </script>
