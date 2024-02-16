@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Packs</title>
+    <title>Patsers League</title>
     <style>
         table {
             width: 50%;
@@ -47,9 +47,10 @@
     <input type="number" id="amount" name="amount"><br><br>
     <div class="button-container">
         <button type="button" onclick="subtractPacks()">Use Packs</button>
-        <button type="button" onclick="addThreePacks()">Add 3 Packs</button>
         <button type="button" onclick="resetToSix()">Reset to 6</button>
     </div>
+
+    <button type="button" onclick="addThreePacks()" style="margin-top: 10px;">New Set WOOP WOOP!!!!</button>
 </form>
 
 <script>
@@ -98,7 +99,7 @@
     function addThreePacks() {
         for (var name in packsData) {
             if (packsData.hasOwnProperty(name)) {
-                packsData[name] += 3;
+                packsData[name] = Math.min(packsData[name] + 3, 12);
             }
         }
         localStorage.setItem('packsData', JSON.stringify(packsData));
