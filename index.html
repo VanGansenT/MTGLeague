@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Packs</title>
+    <style>
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<table id="packsTable">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Amount of Packs</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Thomas</td>
+            <td id="thomasPacks">6</td>
+        </tr>
+        <tr>
+            <td>Kobe</td>
+            <td id="kobePacks">6</td>
+        </tr>
+        <!-- Add more rows as needed -->
+    </tbody>
+</table>
+
+<form id="packsForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name"><br><br>
+    <label for="amount">Amount of Packs Used:</label>
+    <input type="number" id="amount" name="amount"><br><br>
+    <button type="button" onclick="subtractPacks()">Submit</button>
+</form>
+
+<button type="button" onclick="addThreePacks()" style="margin-top: 10px;">New Set!!</button>
+
+<script>
+    function subtractPacks() {
+        var name = document.getElementById("name").value.toLowerCase(); // Convert to lowercase
+        var amount = parseInt(document.getElementById("amount").value);
+        var packsCell = document.getElementById(name.toLowerCase() + "Packs");
+        if (packsCell) {
+            var currentPacks = parseInt(packsCell.innerHTML);
+            if (!isNaN(currentPacks) && !isNaN(amount) && amount > 0 && currentPacks >= amount) {
+                packsCell.innerHTML = currentPacks - amount;
+            } else {
+                alert("Invalid input or insufficient packs!");
+            }
+        } else {
+            alert("Name not found in the table!");
+        }
+    }
+
+    function addThreePacks() {
+        var rows = document.getElementById("packsTable").rows;
+        for (var i = 1; i < rows.length; i++) {
+            var packsCell = rows[i].cells[1];
+            if (packsCell) {
+                var currentPacks = parseInt(packsCell.innerHTML);
+                if (!isNaN(currentPacks)) {
+                    packsCell.innerHTML = currentPacks + 3;
+                }
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
