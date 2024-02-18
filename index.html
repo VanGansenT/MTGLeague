@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patsers League</title>
+    <title>Update Packs</title>
     <style>
         table {
             width: 50%;
@@ -36,7 +36,7 @@
         </tr>
     </thead>
     <tbody>
-        <!-- Table content will be dynamically generated from localStorage -->
+        <!-- Table content will be dynamically generated -->
     </tbody>
 </table>
 
@@ -48,15 +48,16 @@
     <div class="button-container">
         <button type="button" onclick="subtractPacks()">Use Packs</button>
         <button type="button" onclick="resetToSix()">Reset to 6</button>
+        <button type="button" onclick="saveData()">Save Data</button>
+        <button type="button" onclick="loadData()">Load Data</button> <!-- New button for loading data -->
     </div>
-
-    <button type="button" onclick="addThreePacks()" style="margin-top: 10px;">New Set WOOP WOOP!!!!</button>
 </form>
 
+<button type="button" onclick="addThreePacks()" style="margin-top: 10px;">New set WOOP WOOP!!</button>
+
 <script>
-    // Read data from localStorage if available
-    var data = localStorage.getItem('packsData');
-    var packsData = data ? JSON.parse(data) : {};
+    var packsData = {};
+
 
     // Function to update table based on packsData
     function updateTable() {
@@ -87,9 +88,9 @@
             return;
         }
 
-        if (name in packsData && packsData[name] >= amount) {
-            packsData[name] -= amount;
-            localStorage.setItem('packsData', JSON.stringify(packsData));
+        var currentPacks = parseInt(packsData[name]) || 0;
+        if (currentPacks >= amount) {
+            packsData[name] = currentPacks - amount;
             updateTable();
         } else {
             alert("Invalid input or insufficient packs!");
@@ -99,10 +100,9 @@
     function addThreePacks() {
         for (var name in packsData) {
             if (packsData.hasOwnProperty(name)) {
-                packsData[name] = Math.min(packsData[name] + 3, 12);
+                packsData[name] = Math.min((parseInt(packsData[name]) || 0) + 3, 12);
             }
         }
-        localStorage.setItem('packsData', JSON.stringify(packsData));
         updateTable();
     }
 
@@ -113,8 +113,39 @@
             return;
         }
         packsData[name] = 6;
-        localStorage.setItem('packsData', JSON.stringify(packsData));
         updateTable();
+    }
+
+    function saveData() {
+        const data = JSON.stringify(packsData, null, 2); // null and 2 for pretty printing
+        fs.writeFileSync('data.json', data, 'utf8');
+        console.log('Data saved successfully!');
+    }
+
+    function loadData() {
+        var fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = '.json';
+
+        fileInput.onchange = function() {
+            var file = this.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function() {
+                try {
+                    packsData = JSON.parse(reader.result);
+                    updateTable();
+                    alert('Data loaded successfully!');
+                } catch (error) {
+                    console.error('Error loading data:', error);
+                    alert('Failed to load data');
+                }
+            };
+
+            reader.readAsText(file);
+        };
+
+        fileInput.click();
     }
 </script>
 
