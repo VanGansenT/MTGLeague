@@ -4,7 +4,7 @@ from itertools import combinations
 class EventOrganizer:
     def __init__(self, master):
         self.master = master
-        self.master.title("1v1 Event Organizer")
+        self.master.title("MTG LEAGUE")
 
         self.players = {}
         self.matches = []
