@@ -1,6 +1,7 @@
-Thomas: 4-1
+Thomas: 5-1
 Kobe: 4-1 (?)
-K-dog: 4-1 (?)
+K-dog: 5-1 (?)
 Wout: 2-3
 Krike: 1-4
-Ben 0-5(?)
+Ben: 0-5(?)
+Klaas: 0-3
