@@ -1,5 +1,36 @@
 import tkinter as tk
 from itertools import combinations
+from PIL import Image, ImageTk
+
+image_path = "resources/images/"
+class LoadingScreen:
+    def __init__(self, master):
+        self.master = master
+        self.master.title("Loading...")
+
+        # Load your image for the loading screen
+        self.loading_image = Image.open(image_path + "LoadingScreenMTG.jpg")
+        self.loading_image = self.loading_image.resize((600, 600))
+        self.loading_photo = ImageTk.PhotoImage(self.loading_image)
+
+        # Display the loading image
+        self.loading_label = tk.Label(self.master, image=self.loading_photo)
+        self.loading_label.pack()
+
+        # After a certain delay, destroy the loading screen and start the main application
+        self.master.after(3500, self.load_main_app)
+
+    def load_main_app(self):
+        self.master.destroy()
+        self.root = tk.Tk()
+        event_organizer = EventOrganizer(self.root)
+        display_results_button = tk.Button(self.root, text="Display Results", command=event_organizer.display_results)
+        display_results_button.grid(row=4, column=0, columnspan=5)
+        display_results_button = tk.Button(self.root, text="Suggest new matches",
+                                           command=event_organizer.suggest_matches)
+        display_results_button.grid(row=5, column=0, columnspan=5)
+
+
 
 class EventOrganizer:
     def __init__(self, master):
@@ -92,10 +123,6 @@ class EventOrganizer:
         print('go fuck yourself')
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    event_organizer = EventOrganizer(root)
-    display_results_button = tk.Button(root, text="Display Results", command=event_organizer.display_results)
-    display_results_button.grid(row=4, column=0, columnspan=5)
-    display_results_button = tk.Button(root, text="Suggest new matches", command=event_organizer.suggest_matches)
-    display_results_button.grid(row=5, column=0, columnspan=5)
-    root.mainloop()
+    root_loading = tk.Tk()
+    loading_screen = LoadingScreen(root_loading)
+    root_loading.mainloop()
