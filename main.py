@@ -53,6 +53,15 @@ class EventOrganizer:
         #self.setup_ui()
         self.create_tabs()
 
+    def get_window_size(self):
+        # Update the window to ensure correct width measurement
+        self.master.update_idletasks()
+
+        # Get the width of the window
+        window_height = self.master.winfo_height()
+        window_width = self.master.winfo_width()
+        return (window_height,window_width)
+
     def setup_ui(self, tab):
 
         self.add_player_ui(tab)
@@ -71,6 +80,32 @@ class EventOrganizer:
 
         self.add_player_button = tk.Button(tab, text="Add Player", command=self.add_player)
         self.add_player_button.grid(row=0, column=2)
+
+    def add_player_ui2(self, tab):
+        (window_width, window_height) = self.get_window_size()
+
+        # Create a black background
+        black_background = tk.Canvas(tab, bg="black", width=window_width, height=window_height)
+        black_background.grid(row=0, column=0, sticky="nsew")
+
+        # Create a frame for the profile selector UI
+        profile_frame = tk.Frame(tab, bg="white")
+        profile_frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+
+        # Player Name Label
+        player_label = tk.Label(profile_frame, text="Player Name:", bg="white", font=("Helvetica", 12))
+        player_label.grid(row=0, column=0, padx=5, pady=5)
+
+
+        # Player Name Entry with rounded corners and light gray background
+        player_entry = tk.Entry(profile_frame, bg="#F0F0F0", bd=2, relief=tk.GROOVE)
+        player_entry.grid(row=0, column=1, padx=5, pady=5)
+
+        # Add Player Button with rounded corners and gradient background
+        add_player_button = tk.Button(profile_frame, text="Add Player", command=self.add_player,
+                                      bg="#4CAF50", fg="white", bd=2, relief=tk.GROOVE, font=("Helvetica", 10),
+                                      activebackground="#45a049", activeforeground="white")
+        add_player_button.grid(row=0, column=2, padx=5, pady=5, ipadx=10)
 
     def add_matches_ui(self,tab):
         self.match_label = tk.Label(tab, text="Match (Player1, Player2, ...):")
@@ -133,7 +168,8 @@ class EventOrganizer:
 
     def add_widgets_to_tab2(self):
 
-        self.add_player_ui(self.tab2)
+        #self.add_player_ui(self.tab2)
+        self.add_player_ui2(self.tab2)
 
     def add_widgets_to_tab3(self):
 
@@ -144,11 +180,9 @@ class EventOrganizer:
         self.result_ui(self.tab4)
 
     def add_widgets_to_tab5(self):
-        # Update the window to ensure correct width measurement
-        self.master.update_idletasks()
 
-        # Get the width of the window
-        window_height = self.master.winfo_height()
+        # Get the height of the window
+        (_,window_height) = self.get_window_size()
         # Load the image
         loading_image = Image.open(image_path + "Nobitches.jpg")
 
