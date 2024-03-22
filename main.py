@@ -1,3 +1,4 @@
+import ctypes
 import tkinter as tk
 from tkinter import ttk
 from itertools import combinations
@@ -107,10 +108,12 @@ class EventOrganizer:
         self.tab2 = ttk.Frame(self.notebook)
         self.tab3 = ttk.Frame(self.notebook)
         self.tab4 = ttk.Frame(self.notebook)
+        self.tab5 = ttk.Frame(self.notebook)
         self.notebook.add(self.tab1, text='All info')
         self.notebook.add(self.tab2, text='Add players')
         self.notebook.add(self.tab3, text='Add matches')
         self.notebook.add(self.tab4, text='Player scores')
+        self.notebook.add(self.tab5, text='No bitches')
         self.notebook.grid(row=0, column=0, sticky="nsew")
 
 
@@ -119,6 +122,7 @@ class EventOrganizer:
         self.add_widgets_to_tab2()
         self.add_widgets_to_tab3()
         self.add_widgets_to_tab4()
+        self.add_widgets_to_tab5()
 
     def add_widgets_to_tab1(self):
         # Widgets for the first tab
@@ -138,6 +142,28 @@ class EventOrganizer:
     def add_widgets_to_tab4(self):
 
         self.result_ui(self.tab4)
+
+    def add_widgets_to_tab5(self):
+        # Update the window to ensure correct width measurement
+        self.master.update_idletasks()
+
+        # Get the width of the window
+        window_height = self.master.winfo_height()
+        # Load the image
+        loading_image = Image.open(image_path + "Nobitches.jpg")
+
+        # Resize the image to fit the window width while maintaining aspect ratio
+        wpercent = (window_height / float(loading_image.size[1]))
+        wsize = int((float(loading_image.size[1]) * float(wpercent)))
+        loading_image = loading_image.resize((window_height, wsize))
+
+        # Convert image to PhotoImage
+        self.loading_photo = ImageTk.PhotoImage(loading_image)
+
+        # Display the loading image
+        self.no_bitches_label = tk.Label(self.tab5, image=self.loading_photo)
+        self.no_bitches_label.grid(row=0, column=0)
+
 
     def add_player(self):
         player_name = self.player_entry.get()
