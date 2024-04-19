@@ -11,6 +11,7 @@ image_path = "resources/images/"
 
 class EventOrganizer:
     def __init__(self, master):
+        self.image_cache = []
         self.master = master
         self.master.title("MTG LEAGUE")
 
@@ -117,7 +118,16 @@ class EventOrganizer:
         # Go over every player and create a label for it
         i = 1
         for player in self.players.keys():
-            # add profile picture
+            # Load and resize the image
+            loading_image = Image.open(self.players[player]["profile_image"])
+            loading_image = loading_image.resize((50, 50))
+            loading_photo = ImageTk.PhotoImage(loading_image)
+            self.image_cache.append(loading_photo)  # Store the reference
+            # Create label with image
+            label_image = tk.Label(tab, image=loading_photo)
+            label_image.grid(row=row + i, column=column)
+            self.player_data_label.append(label_image)
+
 
             # add player name
             label = tk.Label(tab, text=self.players[player]["name"])
