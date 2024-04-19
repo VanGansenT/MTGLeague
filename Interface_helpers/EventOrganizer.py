@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
+# Import the tkinter font module
+import tkinter.font as tkFont
 from PIL import Image, ImageTk
 
 from Interface_helpers.ProfileSelectorMenu import ProfileSelectorMenu
@@ -11,6 +13,8 @@ class EventOrganizer:
     def __init__(self, master):
         self.master = master
         self.master.title("MTG LEAGUE")
+
+        self.player_data_label = []
 
         self.players = {}
         self.matches = []
@@ -99,6 +103,28 @@ class EventOrganizer:
         self.result_text = tk.Text(tab, height=10, width=50)
         self.result_text.grid(row=3, column=0, columnspan=5)
 
+    def player_database_ui(self, tab, row, column):
+
+        for label in self.player_data_label:
+            label.grid_forget()
+        # Create a bold font
+        bold_font = tkFont.Font(weight="bold")
+
+        # Create title label with bold text
+        label = tk.Label(tab, text="Players:", font=bold_font)
+        label.grid(row=row, column=column)
+
+        # Go over every player and create a label for it
+        i = 1
+        for player in self.players.keys():
+            # add profile picture
+
+            # add player name
+            label = tk.Label(tab, text=self.players[player]["name"])
+            label.grid(row=row + i, column=column + 1)
+            self.player_data_label.append(label)
+            i += 1
+
     def create_tabs(self):
         self.notebook = ttk.Notebook(self.master)
         self.tab1 = ttk.Frame(self.notebook)
@@ -131,7 +157,8 @@ class EventOrganizer:
 
         # self.add_player_ui(self.tab2)
         # self.add_player_ui2(self.tab2)
-        ProfileSelectorMenu(self.tab2, "", 0, 0)
+        ProfileSelectorMenu(self, self.tab2, "resources/images/profile", 0, 0)
+        self.player_database_ui(self.tab2,1,0)
 
     def add_widgets_to_tab3(self):
 
@@ -170,6 +197,20 @@ class EventOrganizer:
                 self.result_text.insert(tk.END, f"Player {player_name} already exists!\n")
         else:
             self.result_text.insert(tk.END, "Please enter a player name!\n")
+
+    def add_player(self, player_name, profile_image):
+        player_added = False
+        if player_name:
+            if player_name not in self.players:
+                # Set up the player
+                self.players[player_name] = {"name": player_name, "profile_image": profile_image}
+                print("player name is " + self.players[player_name]["name"])
+                print("Player profile image is " + self.players[player_name]["profile_image"])
+                player_added = True
+                #Updata label database
+                self.player_database_ui(self.tab2,1,0)
+
+        return player_added
 
     def add_match(self):
         match_str = self.match_entry.get()
