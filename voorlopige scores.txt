@@ -1,15 +1,15 @@
-Thomas: 4-0
-Kobe: 1-3
-K-dog: 1-3
+Thomas: 6-0
+Kobe: 3-3
+K-dog: 2-3
 Wout: 3-1
-Ben: 
-Klaas: 
+Ben: 2-1
+Klaas: 2-3
 
 AVGS
-Thomas: AVG 1
-Kobe: AVG 2
-K-dog: AVG 1
-Wout: AVG 3
-Krike: AVG 4
-Ben: AVG 5
-Klaas: AVG 6    
+Thomas: AVG (1+1) = 1
+Kobe: AVG (2+3) = 2.5
+K-dog: AVG (1+5)  = 3
+Wout: AVG 3 => niet meer in de league
+Krike: AVG (4+2) = 3 
+Ben: AVG (5+4) = 4.5
+Klaas: AVG (6+5) = 5.5    
