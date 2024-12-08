@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from itertools import combinations
 from PIL import Image, ImageTk
+import os
 
 from Interface_helpers.LoadingScreen import LoadingScreen
 

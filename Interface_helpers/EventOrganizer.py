@@ -5,6 +5,7 @@ import tkinter.font as tkFont
 from PIL import Image, ImageTk
 
 from Interface_helpers.ProfileSelectorMenu import ProfileSelectorMenu
+from Interface_helpers.MatchCreatorMenu import MatchCreatorMenu
 
 image_path = "resources/images/"
 
@@ -171,8 +172,10 @@ class EventOrganizer:
         self.player_database_ui(self.tab2,1,0)
 
     def add_widgets_to_tab3(self):
-
-        self.add_matches_ui(self.tab3)
+        MatchCreatorMenu(self, self.tab3, 0, 0)
+        # ProfileSelectorMenu(self, self.tab2, "resources/images/profile", 0, 0)
+        # self.player_database_ui(self.tab2,1,0)
+        # self.add_matches_ui(self.tab3)
 
     def add_widgets_to_tab4(self):
 
@@ -210,7 +213,7 @@ class EventOrganizer:
 
     def add_player(self, player_name, profile_image):
         player_added = False
-        if player_name:
+        if player_name and profile_image:
             if player_name not in self.players:
                 # Set up the player
                 self.players[player_name] = {"name": player_name, "profile_image": profile_image}

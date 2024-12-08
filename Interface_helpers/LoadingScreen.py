@@ -1,4 +1,5 @@
 import tkinter as tk
+import os
 from PIL import Image, ImageTk
 
 from Interface_helpers.EventOrganizer import EventOrganizer
@@ -8,6 +9,7 @@ image_path = "resources/images/"
 
 class LoadingScreen:
     def __init__(self, master):
+        print(os.path.exists(image_path + "LoadingScreenMTG.jpg"))
         self.master = master
         self.master.title("Loading...")
 
@@ -24,7 +26,7 @@ class LoadingScreen:
         self.loading_label.pack()
 
         # After a certain delay, destroy the loading screen and start the main application
-        self.master.after(3500, self.load_main_app)
+        self.master.after(1500, self.load_main_app)
 
     def load_main_app(self):
         self.loading_x = self.master.winfo_x()

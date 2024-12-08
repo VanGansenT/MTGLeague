@@ -2,7 +2,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import os
 import functools
-
+import math
 
 # image_path = "resources/images/"
 
@@ -34,7 +34,7 @@ class ProfileSelectorMenu:
         self.photo = ImageTk.PhotoImage(image)  # Store the reference to prevent garbage collection
 
         # Create a button
-        self.button = tk.Button(master, image=self.photo, command=self.button_click)
+        self.button = tk.Button(master, image=self.photo, command=self.select_profile_image)
         self.button.grid(row=row, column=column, padx=5, pady=10)
 
         self.player_label = tk.Label(master, text="Player Name:")
@@ -49,8 +49,7 @@ class ProfileSelectorMenu:
         self.player_feedback = tk.Label(master, text="")
         self.player_feedback.grid(row=row, column=column + 4)
 
-    def button_click(self):
-        print("Fuck you too")
+    def select_profile_image(self):
         if self.profile_selector is None:
             self.profile_selector = ProfileSelector(self, self.images, 0, 0)
 
@@ -60,22 +59,17 @@ class ProfileSelectorMenu:
         if player_name:
             feedback = self.organizer.add_player(player_name, self.images[self.index])
             if (feedback == True):
-                # For demonstration purposes, let's assume the player is successfully added
                 self.player_feedback.config(text="Player '{}' successfully added".format(player_name), fg="green")
             else:
-                # For demonstration purposes, let's assume the player is successfully added
                 self.player_feedback.config(text="Player '{}' already exist".format(player_name), fg="red")
 
             # Clear the entry after adding the player
             self.player_entry.delete(0, tk.END)
-            # Reset the feedback after 10 seconds
+            # Reset the feedback after N seconds
             self.master.after(5000, self.reset_feedback)
 
     def reset_feedback(self):
         self.player_feedback.config(text="", fg="black")
-
-    def create_profile_selector(self):
-        pass
 
     def select_profile(self, index):
         self.index = index
@@ -113,13 +107,12 @@ class ProfileSelector:
         # Bind the close_window() function to the WM_DELETE_WINDOW event
         self.master.protocol("WM_DELETE_WINDOW", self.close_window)
 
-        row = 2
         column = 3
-        # self.master.mainloop()
+        row = math.ceil(len(images) / column)
 
         for i in range(row):
             for j in range(column):
-                self.create_profile_button(i * column + j, i, j)
+                self.create_profile_button(i * column + j, i + x, j + y)
 
     def create_profile_button(self, index, row, column):
         image = self.images[index]
