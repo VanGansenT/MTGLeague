@@ -19,7 +19,7 @@ def get_image_filenames(directory):
     return image_filenames
 
 
-class ProfileSelectorMenu:
+class ProfileCreatorMenu:
     def __init__(self, organizer, master, image_path, row, column):
         self.organizer = organizer
         self.master = master
@@ -51,7 +51,7 @@ class ProfileSelectorMenu:
 
     def select_profile_image(self):
         if self.profile_selector is None:
-            self.profile_selector = ProfileSelector(self, self.images, 0, 0)
+            self.profile_selector = ProfileImageSelector(self, self.images, 0, 0)
 
     def add_player(self):
         player_name = self.player_entry.get()
@@ -96,7 +96,7 @@ class ProfileSelectorMenu:
         self.profile_selector = None
 
 
-class ProfileSelector:
+class ProfileImageSelector:
     def __init__(self, profile_controller, images, x, y):
         self.profile_controller = profile_controller
         self.master = tk.Toplevel()

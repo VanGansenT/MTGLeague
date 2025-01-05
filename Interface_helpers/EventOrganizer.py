@@ -4,8 +4,10 @@ from tkinter import ttk
 import tkinter.font as tkFont
 from PIL import Image, ImageTk
 
-from Interface_helpers.ProfileSelectorMenu import ProfileSelectorMenu
+
+from Interface_helpers.ProfileCreatorMenu import ProfileCreatorMenu
 from Interface_helpers.MatchCreatorMenu import MatchCreatorMenu
+from Interface_helpers.PlayerObject import PlayerObject
 
 image_path = "resources/images/"
 
@@ -107,8 +109,8 @@ class EventOrganizer:
 
     def player_database_ui(self, tab, row, column):
 
-        for label in self.player_data_label:
-            label.grid_forget()
+        self.player_data_label.clear()  # Removes references to previous labels
+
         # Create a bold font
         bold_font = tkFont.Font(weight="bold")
 
@@ -119,21 +121,9 @@ class EventOrganizer:
         # Go over every player and create a label for it
         i = 1
         for player in self.players.keys():
-            # Load and resize the image
-            loading_image = Image.open(self.players[player]["profile_image"])
-            loading_image = loading_image.resize((50, 50))
-            loading_photo = ImageTk.PhotoImage(loading_image)
-            self.image_cache.append(loading_photo)  # Store the reference
-            # Create label with image
-            label_image = tk.Label(tab, image=loading_photo)
-            label_image.grid(row=row + i, column=column)
-            self.player_data_label.append(label_image)
-
-
-            # add player name
-            label = tk.Label(tab, text=self.players[player]["name"])
-            label.grid(row=row + i, column=column + 1)
-            self.player_data_label.append(label)
+            # Create and add a new PlayerObject
+            player_object = PlayerObject(self, tab, player, row + i, column)
+            self.player_data_label.append(player_object)
             i += 1
 
     def create_tabs(self):
@@ -168,7 +158,7 @@ class EventOrganizer:
 
         # self.add_player_ui(self.tab2)
         # self.add_player_ui2(self.tab2)
-        ProfileSelectorMenu(self, self.tab2, "resources/images/profile", 0, 0)
+        ProfileCreatorMenu(self, self.tab2, "resources/images/profile", 0, 0)
         self.player_database_ui(self.tab2,1,0)
 
     def add_widgets_to_tab3(self):
