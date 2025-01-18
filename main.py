@@ -5,7 +5,7 @@ from itertools import combinations
 from PIL import Image, ImageTk
 import os
 
-from Interface_helpers.LoadingScreen import LoadingScreen
+from src.interface_helpers.LoadingScreen import LoadingScreen
 
 
 if __name__ == "__main__":
