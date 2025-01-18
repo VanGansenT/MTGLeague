@@ -215,6 +215,9 @@ class EventOrganizer:
                 self.player_database_ui(self.tab2,1,0)
 
         return player_added
+    
+    def get_players(self):
+        return self.players
 
     def add_match(self):
         match_str = self.match_entry.get()

@@ -20,9 +20,9 @@ def get_image_filenames(directory):
 
 
 class ProfileCreatorMenu:
-    def __init__(self, organizer, master, image_path, row, column):
-        self.organizer = organizer
-        self.master = master
+    def __init__(self, controller, tab, image_path, row, column):
+        self.controller = controller
+        self.tab = tab
         self.image_path = image_path
         self.profile_selector = None
         self.images = get_image_filenames(self.image_path)
@@ -34,19 +34,19 @@ class ProfileCreatorMenu:
         self.photo = ImageTk.PhotoImage(image)  # Store the reference to prevent garbage collection
 
         # Create a button
-        self.button = tk.Button(master, image=self.photo, command=self.select_profile_image)
+        self.button = tk.Button(tab, image=self.photo, command=self.select_profile_image)
         self.button.grid(row=row, column=column, padx=5, pady=10)
 
-        self.player_label = tk.Label(master, text="Player Name:")
+        self.player_label = tk.Label(tab, text="Player Name:")
         self.player_label.grid(row=row, column=column + 1)
 
-        self.player_entry = tk.Entry(master)
+        self.player_entry = tk.Entry(tab)
         self.player_entry.grid(row=row, column=column + 2)
 
-        self.add_player_button = tk.Button(master, text="Add Player", command=self.add_player)
+        self.add_player_button = tk.Button(tab, text="Add Player", command=self.add_player)
         self.add_player_button.grid(row=row, column=column + 3)
 
-        self.player_feedback = tk.Label(master, text="")
+        self.player_feedback = tk.Label(tab, text="")
         self.player_feedback.grid(row=row, column=column + 4)
 
     def select_profile_image(self):
@@ -57,7 +57,7 @@ class ProfileCreatorMenu:
         player_name = self.player_entry.get()
 
         if player_name:
-            feedback = self.organizer.add_player(player_name, self.images[self.index])
+            feedback = self.controller.add_player(player_name, self.images[self.index])
             if (feedback == True):
                 self.player_feedback.config(text="Player '{}' successfully added".format(player_name), fg="green")
             else:
@@ -66,7 +66,7 @@ class ProfileCreatorMenu:
             # Clear the entry after adding the player
             self.player_entry.delete(0, tk.END)
             # Reset the feedback after N seconds
-            self.master.after(5000, self.reset_feedback)
+            self.tab.after(5000, self.reset_feedback)
 
     def reset_feedback(self):
         self.player_feedback.config(text="", fg="black")

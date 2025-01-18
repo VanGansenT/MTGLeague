@@ -18,11 +18,13 @@ class MatchCreatorMenu:
             self.profile_selector = None
 
 class PlayerSelector:
-    def __init__(self, controller, organizer, master, playerName, row, column):
+    def __init__(self, player_selector_controller, row, column):
         self.master = tk.Toplevel()
         self.master.title("player selection")
-        self;controller = controller
+        self.controller = player_selector_controller
         # self.playerObjects = playerObjects
+
+
 
         # Bind the close_window() function to the WM_DELETE_WINDOW event
         self.master.protocol("WM_DELETE_WINDOW", self.close_window)
