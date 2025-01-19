@@ -24,6 +24,8 @@ class EventOrganizer:
         self.players = {}
         self.matches = []
 
+        self.notebook = ttk.Notebook(self.master)
+
         # self.setup_ui()
         self.create_tabs()
 
@@ -127,51 +129,44 @@ class EventOrganizer:
             i += 1
 
     def create_tabs(self):
-        self.notebook = ttk.Notebook(self.master)
         self.tab1 = ttk.Frame(self.notebook)
         self.tab2 = ttk.Frame(self.notebook)
         self.tab3 = ttk.Frame(self.notebook)
         self.tab4 = ttk.Frame(self.notebook)
-        self.tab5 = ttk.Frame(self.notebook)
-        self.notebook.add(self.tab1, text='All info')
-        self.notebook.add(self.tab2, text='Add players')
-        self.notebook.add(self.tab3, text='Add matches')
-        self.notebook.add(self.tab4, text='Player scores')
-        self.notebook.add(self.tab5, text='No bitches')
+
+        self.notebook.add(self.tab1, text='Add players')
+        self.notebook.add(self.tab2, text='Add matches')
+        self.notebook.add(self.tab3, text='Player scores')
+        self.notebook.add(self.tab4, text='No bitches')
         self.notebook.grid(row=0, column=0, sticky="nsew")
 
         # Add widgets to the tabs
-        self.add_widgets_to_tab1()
-        self.add_widgets_to_tab2()
-        self.add_widgets_to_tab3()
-        self.add_widgets_to_tab4()
-        self.add_widgets_to_tab5()
+        self.add_widgets()
 
-    def add_widgets_to_tab1(self):
-        # Widgets for the first tab
-        # self.label1 = ttk.Label(self.tab1, text='Content for Tab 1')
-        # self.label1.grid(row=0, column=0, padx=10, pady=10)
+    def add_widgets(self):
+        self.add_player_menu(self.tab1)
+        self.match_creator_menu(self.tab2)
+        self.player_scores_menu(self.tab3)
+        self.no_bitches_menu(self.tab4)
 
-        self.setup_ui(self.tab1)
+    def update_tabs(self):
+        current_tab = self.notebook.select()
+        self.add_widgets()
+        self.notebook.select(current_tab)
 
-    def add_widgets_to_tab2(self):
 
-        # self.add_player_ui(self.tab2)
-        # self.add_player_ui2(self.tab2)
-        ProfileCreatorMenu(self, self.tab2, "resources/images/profile", 0, 0)
-        self.player_database_ui(self.tab2,1,0)
+    def add_player_menu(self, tab):
+        ProfileCreatorMenu(self, tab, "resources/images/profile", 0, 0)
+        self.player_database_ui(tab,1,0)
 
-    def add_widgets_to_tab3(self):
-        MatchCreatorMenu(self, self.tab3, 0, 0)
-        # ProfileSelectorMenu(self, self.tab2, "resources/images/profile", 0, 0)
-        # self.player_database_ui(self.tab2,1,0)
-        # self.add_matches_ui(self.tab3)
+    def match_creator_menu(self, tab):
+        MatchCreatorMenu(self, tab, 0, 0)
 
-    def add_widgets_to_tab4(self):
+    def player_scores_menu(self,tab):
+        pass
+        # self.result_ui(self.tab4)
 
-        self.result_ui(self.tab4)
-
-    def add_widgets_to_tab5(self):
+    def no_bitches_menu(self,tab):
 
         # Get the height of the window
         (_, window_height) = self.get_window_size()
@@ -187,19 +182,8 @@ class EventOrganizer:
         self.loading_photo = ImageTk.PhotoImage(loading_image)
 
         # Display the loading image
-        self.no_bitches_label = tk.Label(self.tab5, image=self.loading_photo)
+        self.no_bitches_label = tk.Label(tab, image=self.loading_photo)
         self.no_bitches_label.grid(row=0, column=0)
-
-    def add_player(self):
-        player_name = self.player_entry.get()
-        if player_name:
-            if player_name not in self.players:
-                self.players[player_name] = 0
-                self.result_text.insert(tk.END, f"Added player: {player_name}\n")
-            else:
-                self.result_text.insert(tk.END, f"Player {player_name} already exists!\n")
-        else:
-            self.result_text.insert(tk.END, "Please enter a player name!\n")
 
     def add_player(self, player_name, profile_image):
         player_added = False
@@ -212,47 +196,9 @@ class EventOrganizer:
                 print("Player profile image is " + self.players[player_name].imagePath)
                 player_added = True
                 #Updata label database
-                self.player_database_ui(self.tab2,1,0)
+                self.update_tabs()
 
         return player_added
     
     def get_players(self):
         return self.players
-
-    def add_match(self):
-        match_str = self.match_entry.get()
-        winner = self.winner_entry.get()
-        if match_str:
-            players = match_str.split(", ")
-            if len(players) >= 2:
-                valid_players = all(player in self.players for player in players)
-                if valid_players:
-                    if winner in players or winner == "":
-                        self.matches.append((players, winner))  # Store match with winner
-                        self.result_text.insert(tk.END, f"Added match: {', '.join(players)} - Winner: {winner}\n")
-                        if winner:
-                            for player in players:
-                                if player == winner:
-                                    self.players[player] += 1
-                    else:
-                        self.result_text.insert(tk.END, "Winner is not part of this match!\n")
-                else:
-                    self.result_text.insert(tk.END, "One or more players don't exist!\n")
-            else:
-                self.result_text.insert(tk.END, "A match needs at least 2 players!\n")
-        else:
-            self.result_text.insert(tk.END, "Please enter a match!\n")
-
-    def display_results(self):
-        self.result_text.delete(1.0, tk.END)
-        for player, wins in self.players.items():
-            self.result_text.insert(tk.END, f"{player}: {wins} wins\n")
-        self.result_text.insert(tk.END, "\nMatches:\n")
-        for i, (match_players, winner) in enumerate(self.matches):
-            result_str = f"{', '.join(match_players)}"
-            if winner:
-                result_str += f" - Winner: {winner}"
-            self.result_text.insert(tk.END, f"{i + 1}. {result_str}\n")
-
-    def suggest_matches(self):
-        print('go fuck yourself')

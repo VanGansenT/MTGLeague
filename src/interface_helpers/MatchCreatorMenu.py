@@ -1,5 +1,7 @@
 import tkinter as tk
+from tkinter import ttk
 from PIL import Image, ImageTk
+from src.models.PlayerObject import PlayerObject
 import os
 import functools
 import math
@@ -9,29 +11,95 @@ class MatchCreatorMenu:
     def __init__(self, organizer, master, row, column):
         self.organizer = organizer
         self.master = master
-        # self.player1 = PlayerSelector(organizer, master, "Player 1", row, column)
-        # self.player2 = PlayerSelector(organizer, master, "Player 2", row, column + 1)
 
-    def close_player_selector(self):
-        if self.profile_selector is not None:
-            self.profile_selector.destroy()
-            self.profile_selector = None
+        available_players = organizer.get_players()
+
+        # Create player selectors for Player 1 and Player 2
+        self.player1 = PlayerSelector(self.master, "Player 1", available_players, row, column)
+        self.player2 = PlayerSelector(self.master, "Player 2", available_players, row, column + 1)
+
+        # Add a single Confirm button
+        self.confirm_button = tk.Button(
+            self.master,
+            text="Confirm",
+            command=self.confirm_selection,
+            font=("Arial", 12, "bold"),
+            bg="#4CAF50",
+            fg="white",
+        )
+        self.confirm_button.grid(row=row, column=column + 2, columnspan=2, pady=20)
+
+    def confirm_selection(self):
+        """Handle confirmation for both players."""
+        player1_selection = self.player1.selected_player.get()
+        player2_selection = self.player2.selected_player.get()
+        print(f"Player 1: {player1_selection}")
+        print(f"Player 2: {player2_selection}")
+
 
 class PlayerSelector:
-    def __init__(self, player_selector_controller, row, column):
-        self.master = tk.Toplevel()
-        self.master.title("player selection")
-        self.controller = player_selector_controller
-        # self.playerObjects = playerObjects
+    def __init__(self, master, label_text, player_map, row, column):
 
+        self.player_map = player_map
 
+        players = self.get_player_names()
+        if not players:
+            self.selected_player = tk.StringVar(value="No players available")  # Make it a StringVar
+            self.image_path = "resources\\images\\profile\\ajaniGoldmanes.jpg"
+        else:
+            self.selected_player = tk.StringVar(value=players[0])  # Make it a StringVar
+            self.image_path = self.get_player_profile_image(self.selected_player.get())
 
-        # Bind the close_window() function to the WM_DELETE_WINDOW event
-        self.master.protocol("WM_DELETE_WINDOW", self.close_window)
+        # Frame to encapsulate the player selector
+        self.frame = tk.Frame(master, relief="groove", bd=2, padx=10, pady=10)
+        self.frame.grid(row=row, column=column, padx=10, pady=10)
 
-    def close_window(self):
-        self.controller.close_player_selector()
+        # Label to identify the player (e.g., "Player 1")
+        self.label = tk.Label(self.frame, text=label_text, font=("Arial", 14, "bold"))
+        self.label.pack(pady=5)
 
+        # Load and display a default profile image
+        self.profile_image = self.load_image(self.image_path, (100, 100))
+        self.image_label = tk.Label(self.frame, image=self.profile_image)
+        self.image_label.pack(pady=5)
+
+        # Dropdown menu for selecting players
+        self.dropdown = ttk.Combobox(
+            self.frame,
+            textvariable=self.selected_player,
+            values=players,
+            state="readonly"
+        )
+        self.dropdown.pack(pady=5)
+
+         # Add a listener for the dropdown change to update the profile image
+        self.dropdown.bind("<<ComboboxSelected>>", self.update_profile_image)
+
+    def get_player_names(self):
+        player_names = list(self.player_map.keys())
+        return player_names
+  
+    def get_player_profile_image(self, player_name):
+        player_object = self.player_map[player_name]
+        return player_object.imagePath
+
+    def load_image(self, path, size):
+        """Helper method to load and resize an image."""
+        try:
+            image = Image.open(path)
+            image = image.resize(size)
+            return ImageTk.PhotoImage(image)
+        except Exception as e:
+            print(f"Error loading image: {e}")
+            return None
+    
+    def update_profile_image(self, event):
+        """Update the displayed profile image based on the selected player."""
+        selected_player_name = self.selected_player.get()
+        self.image_path = self.get_player_profile_image(selected_player_name)
+        self.profile_image = self.load_image(self.image_path, (100, 100))
+        self.image_label.config(image=self.profile_image)
+        
 class MatchObject:
     def __init__(self, organizer, master, image_path, row, column):
         pass
