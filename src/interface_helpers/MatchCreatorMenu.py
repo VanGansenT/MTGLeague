@@ -26,15 +26,25 @@ class MatchCreatorMenu:
             font=("Arial", 12, "bold"),
             bg="#4CAF50",
             fg="white",
+            state= self.get_button_state()
         )
         self.confirm_button.grid(row=row, column=column + 2, columnspan=2, pady=20)
+
+    def get_button_state(self):
+        if self.player1.dropdown["state"] == "readonly" and self.player2.dropdown["state"] == "readonly":
+            return "normal"
+        return "disabled"
 
     def confirm_selection(self):
         """Handle confirmation for both players."""
         player1_selection = self.player1.selected_player.get()
         player2_selection = self.player2.selected_player.get()
-        print(f"Player 1: {player1_selection}")
-        print(f"Player 2: {player2_selection}")
+        if (self.is_valid_player(player1_selection), self.is_valid_player(player2_selection)):
+            print(f"Player 1: {player1_selection}")
+            print(f"Player 2: {player2_selection}")
+
+    def is_valid_player(self, playerName):
+        return playerName != "No players available"
 
 
 class PlayerSelector:
@@ -45,10 +55,12 @@ class PlayerSelector:
         players = self.get_player_names()
         if not players:
             self.selected_player = tk.StringVar(value="No players available")  # Make it a StringVar
-            self.image_path = "resources\\images\\profile\\ajaniGoldmanes.jpg"
+            self.image_path = os.path.join("resources", "images", "profile", "ajaniGoldmanes.jpg")
+            self.dropdown_state = "disabled"
         else:
             self.selected_player = tk.StringVar(value=players[0])  # Make it a StringVar
             self.image_path = self.get_player_profile_image(self.selected_player.get())
+            self.dropdown_state = "readonly"
 
         # Frame to encapsulate the player selector
         self.frame = tk.Frame(master, relief="groove", bd=2, padx=10, pady=10)
@@ -68,7 +80,7 @@ class PlayerSelector:
             self.frame,
             textvariable=self.selected_player,
             values=players,
-            state="readonly"
+            state=self.dropdown_state
         )
         self.dropdown.pack(pady=5)
 
@@ -82,6 +94,9 @@ class PlayerSelector:
     def get_player_profile_image(self, player_name):
         player_object = self.player_map[player_name]
         return player_object.imagePath
+    
+    def get_dropdown_state(self):
+        return self.dropdown_state
 
     def load_image(self, path, size):
         """Helper method to load and resize an image."""
@@ -100,6 +115,4 @@ class PlayerSelector:
         self.profile_image = self.load_image(self.image_path, (100, 100))
         self.image_label.config(image=self.profile_image)
         
-class MatchObject:
-    def __init__(self, organizer, master, image_path, row, column):
-        pass
+
