@@ -1,3 +1,5 @@
+import logging
+
 class MatchObject:
     def __init__(self, player1: str, player2: str):
         self.player1 = player1
@@ -18,9 +20,9 @@ class MatchObject:
 
     def print_match_result(self) -> str:
         if self.is_draw():
-            print(f"Match between {self.player1} and {self.player2} is ongoing or is a draw.")
+            logging.info(f"Match between {self.player1} and {self.player2} is ongoing or is a draw.")
         else:
-            return f"{self.get_winning_player()} won the match."
+            logging.info(f"{self.get_winning_player()} won the match.")
     
     def get_winning_player(self):
         if(self.is_draw()):

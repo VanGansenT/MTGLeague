@@ -1,13 +1,15 @@
 import tkinter as tk
 from tkinter import ttk
-from src.interface_helpers.PlayerSelector import PlayerSelector
+from src.models import MatchObject
+from src.views.PlayerSelector import PlayerSelector
 import logging
 
 class MatchCreatorMenu:
     def __init__(self, organizer, master, row, column):
-        logging.basicConfig(level=logging.INFO)
         self.organizer = organizer
         self.master = master
+
+        self.matches = []
 
         available_players = organizer.get_players()
 
@@ -45,6 +47,17 @@ class MatchCreatorMenu:
         if (self.is_valid_player(player1_selection), self.is_valid_player(player2_selection)):
             logging.info(f"Player 1: {player1_selection}")
             logging.info(f"Player 2: {player2_selection}")
+
+    def create_match(self, player1, player2):
+        """Create a match object with the selected players."""
+        if self.is_valid_player(player1) and self.is_valid_player(player2):
+            match = MatchObject(player1, player2)
+            self.matches.append(match)
+            logging.info(f"Match created between {player1} and {player2}")
+            return match
+        else:
+            logging.error("Invalid player selection for match creation.")
+            return None
 
     def is_valid_player(self, playerName):
         return playerName != "No players available"

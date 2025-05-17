@@ -6,8 +6,8 @@ from PIL import Image, ImageTk
 import logging
 
 
-from src.interface_helpers.ProfileCreatorMenu import ProfileCreatorMenu
-from src.interface_helpers.MatchCreatorMenu import MatchCreatorMenu
+from src.views.ProfileCreatorMenu import ProfileCreatorMenu
+from src.controller.MatchCreatorMenu import MatchCreatorMenu
 from src.models.PlayerObject import PlayerObject
 from src.views.PlayerView import PlayerView
 

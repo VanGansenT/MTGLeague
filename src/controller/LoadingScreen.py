@@ -2,7 +2,7 @@ import tkinter as tk
 import os
 from PIL import Image, ImageTk
 
-from src.interface_helpers.EventOrganizer import EventOrganizer
+from src.controller.EventOrganizer import EventOrganizer
 
 image_path = "resources/images/"
 
