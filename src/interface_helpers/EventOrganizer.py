@@ -3,6 +3,7 @@ from tkinter import ttk
 # Import the tkinter font module
 import tkinter.font as tkFont
 from PIL import Image, ImageTk
+import logging
 
 
 from src.interface_helpers.ProfileCreatorMenu import ProfileCreatorMenu
@@ -15,6 +16,7 @@ image_path = "resources/images/"
 
 class EventOrganizer:
     def __init__(self, master):
+        logging.basicConfig(level=logging.INFO, format='%(message)s')
         self.image_cache = []
         self.master = master
         self.master.title("MTG LEAGUE")
