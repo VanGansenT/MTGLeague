@@ -67,6 +67,7 @@ class MatchCreatorMenu:
             match = MatchObject(playerObject1, playerObject2)
             self.matches.append(match)
             logging.info(f"Match created between {player1} and {player2}")
+            self.matches[-1].print_match_result()
             return match
         else:
             logging.error("Invalid player selection for match creation.")
