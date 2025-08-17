@@ -4,6 +4,12 @@ class PlayerObject:
         self.imagePath = image_path
         self.victories = victories
 
+    def get_name(self):
+        return self.name
+    
+    def get_image_path(self):
+        return self.imagePath
+
     def add_victory(self):
         self.victories += 1
 

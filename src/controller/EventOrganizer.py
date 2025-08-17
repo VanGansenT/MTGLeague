@@ -6,10 +6,12 @@ from PIL import Image, ImageTk
 import logging
 
 
-from src.views.ProfileCreatorMenu import ProfileCreatorMenu
+from src.models.MatchObject import MatchObject
+from src.controller.ProfileCreatorMenu import ProfileCreatorMenu
 from src.controller.MatchCreatorMenu import MatchCreatorMenu
 from src.models.PlayerObject import PlayerObject
 from src.views.PlayerView import PlayerView
+from src.views.MatchView import MatchView
 
 image_path = "resources/images/"
 
@@ -22,9 +24,10 @@ class EventOrganizer:
         self.master.title("MTG LEAGUE")
 
         self.player_data_label = []
+        self.match_data_label = []
 
         self.players = {}
-        self.matches = []
+        self.matches = {}
 
         self.notebook = ttk.Notebook(self.master)
 
@@ -129,6 +132,23 @@ class EventOrganizer:
             player_object = PlayerView(tab, self.players[player], row + i, column)
             self.player_data_label.append(player_object)
             i += 1
+    
+    def match_database_ui(self, tab, row, column):
+        self.match_data_label.clear()
+
+        # Create a bold font
+        bold_font = tkFont.Font(weight="bold")
+
+        # Create title label with bold text
+        label = tk.Label(tab, text="Matches:", font=bold_font)
+        label.grid(row=row, column=column)
+
+        # Go over every player and create a label for it
+        i = 1
+        for match in self.matches.keys():
+            match_object = MatchView(tab, self.matches[match], row + i, column)
+            self.match_data_label.append(match_object)
+            i += 1
 
     def create_tabs(self):
         self.tab1 = ttk.Frame(self.notebook)
@@ -163,27 +183,21 @@ class EventOrganizer:
 
     def match_creator_menu(self, tab):
         MatchCreatorMenu(self, tab, 0, 0)
-
+        self.match_database_ui(tab,1,0)
+        
     def player_scores_menu(self,tab):
         pass
-        # self.result_ui(self.tab4)
 
     def no_bitches_menu(self,tab):
 
-        # Get the height of the window
         (_, window_height) = self.get_window_size()
-        # Load the image
         loading_image = Image.open(image_path + "Nobitches.jpg")
 
-        # Resize the image to fit the window width while maintaining aspect ratio
         wpercent = (window_height / float(loading_image.size[1]))
         wsize = int((float(loading_image.size[1]) * float(wpercent)))
         loading_image = loading_image.resize((window_height, wsize))
 
-        # Convert image to PhotoImage
         self.loading_photo = ImageTk.PhotoImage(loading_image)
-
-        # Display the loading image
         self.no_bitches_label = tk.Label(tab, image=self.loading_photo)
         self.no_bitches_label.grid(row=0, column=0)
 
@@ -191,16 +205,35 @@ class EventOrganizer:
         player_added = False
         if player_name and profile_image:
             if player_name not in self.players:
-                # Set up the player
                 self.players[player_name] = PlayerObject(player_name, profile_image)
-                # self.players[player_name] = {"name": player_name, "profile_image": profile_image}
-                print("player name is " + self.players[player_name].name)
-                print("Player profile image is " + self.players[player_name].imagePath)
+                logging.info("player name is " + self.players[player_name].name)
+                logging.info("Player profile image is " + self.players[player_name].imagePath)
                 player_added = True
-                #Updata label database
+
                 self.update_tabs()
 
         return player_added
+    
+    def player_exists(self, player_name):
+        return player_name in self.players
+    
+    def get_player(self, player_name):
+        if self.player_exists(player_name):
+            return self.players[player_name]
+        else:
+            return None
+    
+    def add_match(self, player1, player2):
+        match_added = False
+        if self.player_exists(player1) and self.player_exists(player2):
+            playerObject1 = self.get_player(player1)
+            playerObject2 = self.get_player(player2)
+            match = MatchObject(playerObject1, playerObject2)
+            self.matches[match.get_match_id()] = match
+            match_added = True
+            self.update_tabs()
+
+        return match_added
     
     def get_players(self):
         return self.players
