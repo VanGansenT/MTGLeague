@@ -1,5 +1,6 @@
 import logging
 import uuid
+import json
 
 from src.models.PlayerObject import PlayerObject
 
@@ -47,3 +48,17 @@ class MatchObject:
         if(self.is_draw()):
             return None
         return max(self.scores, key=self.scores.get)
+
+    def to_dict(self):
+        return {
+            "match_id": self.match_id,
+            "players": [
+                self.player1.get_name(),
+                self.player2.get_name()
+            ],
+            "scores": self.scores,
+            "winner": self.get_winning_player()
+        }
+
+    def to_json(self):
+        return json.dumps(self.to_dict(), indent=4)

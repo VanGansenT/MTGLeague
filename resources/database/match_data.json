@@ -1,0 +1,14 @@
+[
+    {
+        "match_id": "de4326ba-2741-4ede-948c-2690f6d318ae",
+        "players": [
+            "ww",
+            "www"
+        ],
+        "scores": {
+            "ww": 0,
+            "www": 1
+        },
+        "winner": "www"
+    }
+]

@@ -4,6 +4,7 @@ from tkinter import ttk
 import tkinter.font as tkFont
 from PIL import Image, ImageTk
 import logging
+import json
 
 
 from src.models.MatchObject import MatchObject
@@ -23,6 +24,9 @@ class EventOrganizer:
         self.master = master
         self.master.title("MTG LEAGUE")
 
+        self.player_database_path = "resources/database/players.json"
+        self.match_database_path = "resources/database/match_data.json"
+
         self.player_data_label = []
         self.match_data_label = []
 
@@ -33,6 +37,8 @@ class EventOrganizer:
 
         # self.setup_ui()
         self.create_tabs()
+
+        self.master.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def get_window_size(self):
         # Update the window to ensure correct width measurement
@@ -237,3 +243,24 @@ class EventOrganizer:
     
     def get_players(self):
         return self.players
+    
+    def create_database(self):
+        self.create_player_database()
+        self.create_match_database()
+
+    def create_player_database(self):
+        players_data = [player.to_dict() for player in self.players.values()]
+        json_data = json.dumps(players_data, indent=4)
+        with open(self.player_database_path, "w", encoding="utf-8") as f:
+            f.write(json_data)
+
+    def create_match_database(self):
+        match_data = [match.to_dict() for match in self.matches.values()]
+        json_data = json.dumps(match_data, indent=4)
+        with open(self.match_database_path, "w", encoding="utf-8") as f:
+            f.write(json_data)
+
+    def on_close(self):
+        self.create_database()
+        print("Window is closing")
+        self.master.destroy()  
