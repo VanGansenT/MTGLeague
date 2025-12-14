@@ -83,14 +83,17 @@ class MatchView:
             self.winner = None
             self.player1_button.config(bg=self.default_bg)
             self.player2_button.config(bg=self.default_bg)
+            self.matchObject.reset_winner()
         else:
             self.winner = winner
             if winner.name == self.player1_button.cget("text"):
                 self.player1_button.config(bg="green")
                 self.player2_button.config(bg=self.default_bg)
+                self.matchObject.set_winner(self.matchObject.player1)
             else:
                 self.player2_button.config(bg="green")
                 self.player1_button.config(bg=self.default_bg)
+                self.matchObject.set_winner(self.matchObject.player2)
 
     def on_hover(self, event):
         if not self.is_clicked:
